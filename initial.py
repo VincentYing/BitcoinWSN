@@ -21,17 +21,22 @@ def loadSigns(filename):
     """
     signs = {}
     with open(filename, 'r') as ipfile:
-    	for line in ipfile:
-            if line[0] != '#':
-                line_arr = line.split()
-                if line_arr[0] == line_arr[1]:
-    				continue
-                node1 = int(line_arr[0])
-                node2 = int(line_arr[1])
-                sign = int(line_arr[2])
-                signs[(node1, node2)] = sign
-                signs[(node2, node1)] = sign
+      for line in ipfile:
+        if line[0] != '#':
+            if filename[-3:] == "csv":
+              line_arr = line.split(',')
+            else:
+              line_arr = line.split()
+            if line_arr[0] == line_arr[1]:
+              continue
+            node1 = int(line_arr[0])
+            node2 = int(line_arr[1])
+            sign = int(line_arr[2])
+            signs[(node1, node2)] = sign
+            signs[(node2, node1)] = sign
+
     return signs
+
 
 def selfEdgeDel(G):
     # Remove self-edges
@@ -43,6 +48,7 @@ def selfEdgeDel(G):
 
     return G
 
+
 def computeTriadCounts(G, signs):
     """
     :param - G: graph
@@ -52,7 +58,6 @@ def computeTriadCounts(G, signs):
     return: Return the counts for t0, t1, t2, and t3 triad types. Count each triad
     only once and do not count self edges.
     """
-
     triad_count = [0, 0, 0, 0] # each position represents count of t0, t1, t2, t3, respectively
     counted = set()
 
@@ -80,11 +85,11 @@ def computeTriadCounts(G, signs):
     
                   # Count Triads
                   numPos = 0
-                  if (signs[(Id, nId)] == 1):
+                  if (signs[(Id, nId)] > 0):
                     numPos = numPos + 1
-                  if (signs[(nId, nnId)] == 1):
+                  if (signs[(nId, nnId)] > 0):
                     numPos = numPos + 1
-                  if (signs[(Id, nnId)] == 1):
+                  if (signs[(Id, nnId)] > 0):
                     numPos = numPos + 1
 
                   triad_count[numPos] = triad_count[numPos] + 1  
@@ -92,17 +97,16 @@ def computeTriadCounts(G, signs):
     return triad_count
 
 
-def displayStats(G, signs):
-    '''
+def fracPosNeg(G, signs):
+    """
     :param - G: graph
     :param - signs: Dictionary of signs (key = node pair (a,b), value = sign)
 
     Computes and prints the fraction of positive edges and negative edges,
         and the probability of each type of triad.
-    '''
+    """
     fracPos = 0
     fracNeg = 0
-    probs = [0,0,0,0]
 
     for k,v in signs.iteritems():
       if v > 0:
@@ -118,9 +122,6 @@ def displayStats(G, signs):
 
     print 'Fraction of Positive Edges: %0.4f' % (fracPos)
     print 'Fraction of Negative Edges: %0.4f' % (fracNeg)
-
-    for i in range(4):
-        print "Probability of Triad t%d: %0.4f" % (i, probs[i])
 
 
 # Data Load
@@ -148,34 +149,75 @@ print
 print "Loading Weighted Graphs:"
 print "Loading bitcoin alpha graph..."
 btcAlphaGr = snap.TNGraph.New()
-btcAlphaGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinalpha.csv", 0, 1)
+btcAlphaGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinalpha.csv", 0, 1, ',')
 
 print "Loading bitcoin otc graph..."
 btcOTCGr = snap.TNGraph.New()
-btcOTCGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0, 1)
+btcOTCGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0, 1, ',')
 print
 
 
-print "Compute Triad Counts:"
-
-print "Epinions graph..."
-signs = loadSigns("Datasets/soc-sign-epinions.txt")
-
+# Triad Count and Positive Negative edges
+print "Epinions graph:"
+epinionsSigns = loadSigns("Datasets/soc-sign-epinions.txt")
 epinionsGr = selfEdgeDel(epinionsGr)
-triad_count = computeTriadCounts(epinionsGr, signs)
-
-for i in range(4):
-    print "Count of Triad t%d: %d" % (i, triad_count[i])
+triad_count = computeTriadCounts(epinionsGr, epinionsSigns)
 
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
 
-displayStats(epinionsGr, signs)
+fracPosNeg(epinionsGr, epinionsSigns)
 
 
-print "Balance"
-print "Status"
+print "Slashdot graph:"
+slashdotSigns = loadSigns("Datasets/soc-sign-Slashdot090221.txt")
+slashdotGr = selfEdgeDel(slashdotGr)
+triad_count = computeTriadCounts(slashdotGr, slashdotSigns)
+
+total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
+for i in range(4):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
+for i in range(4):
+    print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
+
+fracPosNeg(slashdotGr, slashdotSigns)
+
+
+print "BTC Alpha graph:"
+btcAlphaSigns = loadSigns("Datasets/soc-sign-bitcoinalpha.csv")
+btcAlphaGr = selfEdgeDel(btcAlphaGr)
+triad_count = computeTriadCounts(btcAlphaGr, btcAlphaSigns)
+
+total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
+for i in range(4):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
+for i in range(4):
+    print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
+
+fracPosNeg(btcAlphaGr, btcAlphaSigns)
+
+
+print "BTC OTC graph:"
+btcOTCSigns = loadSigns("Datasets/soc-sign-bitcoinotc.csv")
+btcOTCGr = selfEdgeDel(btcOTCGr)
+triad_count = computeTriadCounts(btcOTCGr, btcOTCSigns)
+
+total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
+for i in range(4):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
+for i in range(4):
+    print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
+
+fracPosNeg(btcOTCGr, btcOTCSigns)
+
+
+print
+print "Balance:"
 print
 
+
+print "Status:"
+print
 
