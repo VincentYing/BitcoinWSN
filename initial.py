@@ -33,6 +33,15 @@ def loadSigns(filename):
                 signs[(node2, node1)] = sign
     return signs
 
+def selfEdgeDel(G):
+    # Remove self-edges
+    for edge in G.Edges():
+      srcNId = edge.GetSrcNId()
+      dstNId = edge.GetDstNId()
+      if srcNId == dstNId: 
+        G.DelEdge(srcNId, dstNId)
+
+    return G
 
 def computeTriadCounts(G, signs):
     """
@@ -45,14 +54,6 @@ def computeTriadCounts(G, signs):
     """
 
     triad_count = [0, 0, 0, 0] # each position represents count of t0, t1, t2, t3, respectively
-    
-    # Remove self-edges
-    for edge in G.Edges():
-      srcNId = edge.GetSrcNId()
-      dstNId = edge.GetDstNId()
-      if srcNId == dstNId: 
-        G.DelEdge(srcNId, dstNId)
-
     counted = set()
 
     for NI in G.Nodes():
@@ -125,34 +126,33 @@ def displayStats(G, signs):
 # Data Load
 print "Loading Unweighted Graphs:"
 print "Loading epinions graph..."
-epinionsGr = snap.TUNGraph.New()
-epinionsGr = snap.LoadEdgeList(snap.PUNGraph, "Datasets/soc-sign-epinions.txt", 0, 1)
+epinionsGr = snap.TNGraph.New()
+epinionsGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-epinions.txt", 0, 1)
 
 print "Loading slashdot graph..."
-slashdotGr = snap.TUNGraph.New()
-slashdotGr = snap.LoadEdgeList(snap.PUNGraph, "Datasets/soc-sign-Slashdot090221.txt", 0, 1)
+slashdotGr = snap.TNGraph.New()
+slashdotGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-Slashdot090221.txt", 0, 1)
 
 """
-print "Loading wikipedia graph..."
-wikiGr = snap.TUNGraph.New()
-wikiGr = snap.LoadEdgeList(snap.PUNGraph, "Datasets/wiki-Vote.txt", 0, 1)
+print "Loading wikipedia (requests for adminship) graph..."
+wikiGr = snap.TNGraph.New()
+wikiGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/wiki-RfA.txt", 0, 1)
+
+print "Loading wikipedia (election) graph..."
+wikiGr = snap.TNGraph.New()
+wikiGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/wikiElec.ElecBs3.txt", 0, 1)
 """
 print
 
 
 print "Loading Weighted Graphs:"
 print "Loading bitcoin alpha graph..."
-btcAlphaGr = snap.TUNGraph.New()
-btcAlphaGr = snap.LoadEdgeList(snap.PUNGraph, "Datasets/soc-sign-bitcoinalpha.csv", 0, 1)
+btcAlphaGr = snap.TNGraph.New()
+btcAlphaGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinalpha.csv", 0, 1)
 
 print "Loading bitcoin otc graph..."
-btcOTCGr = snap.TUNGraph.New()
+btcOTCGr = snap.TNGraph.New()
 btcOTCGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0, 1)
-print
-
-
-print "Balance"
-print "Status"
 print
 
 
@@ -160,6 +160,8 @@ print "Compute Triad Counts:"
 
 print "Epinions graph..."
 signs = loadSigns("Datasets/soc-sign-epinions.txt")
+
+epinionsGr = selfEdgeDel(epinionsGr)
 triad_count = computeTriadCounts(epinionsGr, signs)
 
 for i in range(4):
@@ -170,3 +172,10 @@ for i in range(4):
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
 
 displayStats(epinionsGr, signs)
+
+
+print "Balance"
+print "Status"
+print
+
+
