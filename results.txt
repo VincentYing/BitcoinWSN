@@ -1,3 +1,4 @@
+TRIAD COUNT
 Epinions:
 Count of Triad t0: 58732
 Count of Triad t1: 396548
@@ -48,3 +49,14 @@ Fraction of Triad t2: 0.1324
 Fraction of Triad t3: 0.6873
 Fraction of Positive Edges: 0.8492
 Fraction of Negative Edges: 0.1508
+
+
+BALANCE
+Epinions graph:
+False
+Slashdot graph:
+False
+BTC Alpha graph:
+False
+BTC OTC graph:
+False
