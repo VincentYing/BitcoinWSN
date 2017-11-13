@@ -11,7 +11,6 @@ Fraction of Triad t3: 0.8153
 Fraction of Positive Edges: 0.8324
 Fraction of Negative Edges: 0.1676
 
-
 Slashdot:
 Count of Triad t0: 12481
 Count of Triad t1: 80581
@@ -24,6 +23,17 @@ Fraction of Triad t3: 0.7226
 Fraction of Positive Edges: 0.7626
 Fraction of Negative Edges: 0.2374
 
+Wiki RFA graph:
+Count of Triad t0: 2077
+Count of Triad t1: 19263
+Count of Triad t2: 74594
+Count of Triad t3: 243597
+Fraction of Triad t0: 0.0061
+Fraction of Triad t1: 0.0567
+Fraction of Triad t2: 0.2197
+Fraction of Triad t3: 0.7175
+Fraction of Positive Edges: 0.8373
+Fraction of Negative Edges: 0.1627
 
 BTC Alpha:
 Count of Triad t0: 166
@@ -36,7 +46,6 @@ Fraction of Triad t2: 0.1466
 Fraction of Triad t3: 0.7600
 Fraction of Positive Edges: 0.9034
 Fraction of Negative Edges: 0.0966
-
 
 BTC OTC:
 Count of Triad t0: 348
@@ -56,6 +65,8 @@ Epinions graph:
 Unbalanced Triads = 510443, Total Triads = 4910076
 Slashdot graph:
 Unbalanced Triads = 80176, Total Triads = 579565
+Wiki RFA graph:
+Unbalanced Triads = 76671, Total Triads = 339531
 BTC Alpha graph:
 Unbalanced Triads = 3413, Total Triads = 22153
 BTC OTC graph:

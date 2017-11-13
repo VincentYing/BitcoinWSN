@@ -31,7 +31,7 @@ def loadSigns(filename):
               continue
             node1 = int(line_arr[0])
             node2 = int(line_arr[1])
-            sign = int(line_arr[2])
+            sign = float(line_arr[2])
             signs[(node1, node2)] = sign
             signs[(node2, node1)] = sign
 
@@ -206,6 +206,20 @@ wikiGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/wikiElec.ElecBs3.txt", 0, 1)
 print
 
 print "Loading Weighted Graphs:"
+print "Loading wikipedia (requests for adminship) graph..."
+wikiRFAGr = snap.TNGraph.New()
+wikiRFAGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/RFAnet.csv", 0, 1, ',')
+wikiRFAGr = selfEdgeDel(wikiRFAGr)
+wikiRFASigns = loadSigns("Datasets/RFAnet.csv")
+
+"""
+print "Loading wikipedia (edits) graph..."
+wikiEditsGr = snap.TNGraph.New()
+wikiEditsGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/WikiSignedNet.csv", 0, 1, ',')
+wikiEditsGr = selfEdgeDel(wikiEditsGr)
+wikiEditsSigns = loadSigns("Datasets/WikiSignedNet.csv")
+"""
+
 print "Loading bitcoin alpha graph..."
 btcAlphaGr = snap.TNGraph.New()
 btcAlphaGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinalpha.csv", 0, 1, ',')
@@ -220,7 +234,6 @@ btcOTCSigns = loadSigns("Datasets/soc-sign-bitcoinotc.csv")
 print
 
 
-"""
 # Triad Count and Positive Negative edges
 print "TRIAD COUNT"
 print "Epinions graph:"
@@ -241,6 +254,26 @@ for i in range(4):
 
 fracPosNeg(slashdotGr, slashdotSigns)
 
+print "Wiki RFA graph:"
+triad_count = computeTriadCounts(wikiRFAGr, wikiRFASigns)
+total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
+for i in range(4):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
+for i in range(4):
+    print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
+fracPosNeg(wikiRFAGr, wikiRFASigns)
+
+"""
+print "Wiki Edits graph:"
+triad_count = computeTriadCounts(wikiEditsGr, wikiEditsSigns)
+total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
+for i in range(4):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
+for i in range(4):
+    print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
+fracPosNeg(wikiEditsGr, wikiEditsSigns)
+"""
+
 print "BTC Alpha graph:"
 triad_count = computeTriadCounts(btcAlphaGr, btcAlphaSigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
@@ -259,7 +292,6 @@ for i in range(4):
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
 fracPosNeg(btcOTCGr, btcOTCSigns)
 print
-"""
 
 
 # BALANCE
@@ -269,6 +301,12 @@ print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(epinionsGr,
 
 print "Slashdot graph:"
 print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(slashdotGr, slashdotSigns)
+
+print "Wiki RFA graph:"
+print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(wikiRFAGr, wikiRFASigns)
+
+#print "Wiki Edits graph:"
+#print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(wikiEditsGr, wikiEditsSigns)
 
 print "BTC Alpha graph:"
 print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(btcAlphaGr, btcAlphaSigns)
@@ -281,3 +319,5 @@ print
 print "Status:"
 print
 
+print "Fairness and Goodness:"
+print
