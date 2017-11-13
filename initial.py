@@ -123,7 +123,7 @@ def fracPosNeg(G, signs):
     print 'Fraction of Negative Edges: %0.4f' % (fracNeg)
 
 
-def isBalancedNetwork(G, signs):
+def unbalancedTriads(G, signs):
     """
     :param - G: Graph
     :param - signs: Dictionary of signs (key = node pair (a,b), value = sign)
@@ -157,6 +157,7 @@ def isBalancedNetwork(G, signs):
 
     triads = list(counted)
 
+    numUnbalanced = 0
     for idx in range(len(triads)):
       tup = triads[idx]
 
@@ -173,9 +174,9 @@ def isBalancedNetwork(G, signs):
         numNeg = numNeg + 1
 
       if (numNeg == 1) or (numNeg == 3):
-        return False
+        numUnbalanced = numUnbalanced + 1
       
-    return True
+    return (numUnbalanced, len(triads))
 
 
 # Data Load
@@ -258,23 +259,23 @@ for i in range(4):
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
 fracPosNeg(btcOTCGr, btcOTCSigns)
 print
+"""
 
 
 # BALANCE
 print "BALANCE"
 print "Epinions graph:"
-print isBalancedNetwork(epinionsGr, epinionsSigns)
+print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(epinionsGr, epinionsSigns)
 
 print "Slashdot graph:"
-print isBalancedNetwork(slashdotGr, slashdotSigns)
+print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(slashdotGr, slashdotSigns)
 
 print "BTC Alpha graph:"
-print isBalancedNetwork(btcAlphaGr, btcAlphaSigns)
+print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(btcAlphaGr, btcAlphaSigns)
 
 print "BTC OTC graph:"
-print isBalancedNetwork(btcOTCGr, btcOTCSigns)
+print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(btcOTCGr, btcOTCSigns)
 print
-"""
 
 
 print "Status:"

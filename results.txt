@@ -53,10 +53,10 @@ Fraction of Negative Edges: 0.1508
 
 BALANCE
 Epinions graph:
-False
+Unbalanced Triads = 510443, Total Triads = 4910076
 Slashdot graph:
-False
+Unbalanced Triads = 80176, Total Triads = 579565
 BTC Alpha graph:
-False
+Unbalanced Triads = 3413, Total Triads = 22153
 BTC OTC graph:
-False
+Unbalanced Triads = 4782, Total Triads = 33493
