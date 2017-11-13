@@ -63,7 +63,6 @@ def computeTriadCounts(G, signs):
 
     for NI in G.Nodes():
         Id = NI.GetId()
-        print Id
         deg = NI.GetDeg()
         for nth in range(deg):
             nId = NI.GetNbrNId(nth)
@@ -124,15 +123,75 @@ def fracPosNeg(G, signs):
     print 'Fraction of Negative Edges: %0.4f' % (fracNeg)
 
 
+def isBalancedNetwork(G, signs):
+    """
+    :param - G: Graph
+    :param - signs: Dictionary of signs (key = node pair (a,b), value = sign)
+
+    return type: Boolean
+    return: Returns whether G is balanced (True) or not (False).
+    """
+    isBalanced = False
+    counted = set()
+
+    for NI in G.Nodes():
+        Id = NI.GetId()
+        deg = NI.GetDeg()
+        for nth in range(deg):
+            nId = NI.GetNbrNId(nth)
+            ndeg = G.GetNI(nId).GetDeg()
+            for nnth in range(ndeg):
+                nnId = G.GetNI(nId).GetNbrNId(nnth)
+                if Id == nnId: 
+                  continue
+
+                if G.IsEdge(Id, nnId):
+                  tup = tuple(sorted([Id, nId, nnId]))
+
+                  # Check the Set
+                  if (tup in counted):
+                    continue
+
+                  # Insert Triad into set
+                  counted.add(tup)
+
+    triads = list(counted)
+
+    for idx in range(len(triads)):
+      tup = triads[idx]
+
+      e1 = (tup[0], tup[1])
+      e2 = (tup[1], tup[2])
+      e3 = (tup[0], tup[2])
+
+      numNeg = 0
+      if signs[e1] < 0:
+        numNeg = numNeg + 1
+      if signs[e2] < 0:
+        numNeg = numNeg + 1
+      if signs[e3] < 0:
+        numNeg = numNeg + 1
+
+      if (numNeg == 1) or (numNeg == 3):
+        return False
+      
+    return True
+
+
 # Data Load
+print "DATA LOAD"
 print "Loading Unweighted Graphs:"
 print "Loading epinions graph..."
 epinionsGr = snap.TNGraph.New()
 epinionsGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-epinions.txt", 0, 1)
+epinionsGr = selfEdgeDel(epinionsGr)
+epinionsSigns = loadSigns("Datasets/soc-sign-epinions.txt")
 
 print "Loading slashdot graph..."
 slashdotGr = snap.TNGraph.New()
 slashdotGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-Slashdot090221.txt", 0, 1)
+slashdotGr = selfEdgeDel(slashdotGr)
+slashdotSigns = loadSigns("Datasets/soc-sign-Slashdot090221.txt")
 
 """
 print "Loading wikipedia (requests for adminship) graph..."
@@ -145,37 +204,34 @@ wikiGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/wikiElec.ElecBs3.txt", 0, 1)
 """
 print
 
-
 print "Loading Weighted Graphs:"
 print "Loading bitcoin alpha graph..."
 btcAlphaGr = snap.TNGraph.New()
 btcAlphaGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinalpha.csv", 0, 1, ',')
+btcAlphaGr = selfEdgeDel(btcAlphaGr)
+btcAlphaSigns = loadSigns("Datasets/soc-sign-bitcoinalpha.csv")
 
 print "Loading bitcoin otc graph..."
 btcOTCGr = snap.TNGraph.New()
 btcOTCGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0, 1, ',')
+btcOTCGr = selfEdgeDel(btcOTCGr)
+btcOTCSigns = loadSigns("Datasets/soc-sign-bitcoinotc.csv")
 print
 
 
+"""
 # Triad Count and Positive Negative edges
+print "TRIAD COUNT"
 print "Epinions graph:"
-epinionsSigns = loadSigns("Datasets/soc-sign-epinions.txt")
-epinionsGr = selfEdgeDel(epinionsGr)
 triad_count = computeTriadCounts(epinionsGr, epinionsSigns)
-
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
-
 fracPosNeg(epinionsGr, epinionsSigns)
 
-
 print "Slashdot graph:"
-slashdotSigns = loadSigns("Datasets/soc-sign-Slashdot090221.txt")
-slashdotGr = selfEdgeDel(slashdotGr)
 triad_count = computeTriadCounts(slashdotGr, slashdotSigns)
-
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -184,38 +240,41 @@ for i in range(4):
 
 fracPosNeg(slashdotGr, slashdotSigns)
 
-
 print "BTC Alpha graph:"
-btcAlphaSigns = loadSigns("Datasets/soc-sign-bitcoinalpha.csv")
-btcAlphaGr = selfEdgeDel(btcAlphaGr)
 triad_count = computeTriadCounts(btcAlphaGr, btcAlphaSigns)
-
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
 for i in range(4):
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
-
 fracPosNeg(btcAlphaGr, btcAlphaSigns)
 
-
 print "BTC OTC graph:"
-btcOTCSigns = loadSigns("Datasets/soc-sign-bitcoinotc.csv")
-btcOTCGr = selfEdgeDel(btcOTCGr)
 triad_count = computeTriadCounts(btcOTCGr, btcOTCSigns)
-
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
 for i in range(4):
     print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
-
 fracPosNeg(btcOTCGr, btcOTCSigns)
+print
 
 
+# BALANCE
+print "BALANCE"
+print "Epinions graph:"
+print isBalancedNetwork(epinionsGr, epinionsSigns)
+
+print "Slashdot graph:"
+print isBalancedNetwork(slashdotGr, slashdotSigns)
+
+print "BTC Alpha graph:"
+print isBalancedNetwork(btcAlphaGr, btcAlphaSigns)
+
+print "BTC OTC graph:"
+print isBalancedNetwork(btcOTCGr, btcOTCSigns)
 print
-print "Balance:"
-print
+"""
 
 
 print "Status:"
