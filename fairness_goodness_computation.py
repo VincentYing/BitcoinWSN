@@ -10,8 +10,9 @@ Email of code author: srijan@cs.stanford.edu
 
 import networkx as nx
 import math
+import sys
 
-def initiliaze_scores(G):
+def initialize_scores(G):
     fairness = {}
     goodness = {}
     
@@ -68,11 +69,11 @@ def compute_fairness_goodness(G):
     
     return fairness, goodness
 
-skip = int(sys.argv[1])
+#skip = int(sys.argv[1])
 
 G = nx.DiGraph()
 
-f = open("network.csv","r")
+f = open("Datasets/soc-sign-bitcoinalpha.csv","r")
 for l in f:
     ls = l.strip().split(",")
     G.add_edge(ls[0], ls[1], weight = float(ls[2])) ## the weight should already be in the range of -1 to 1
