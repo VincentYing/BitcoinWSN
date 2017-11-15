@@ -49,7 +49,7 @@ def selfEdgeDel(G):
     return G
 
 
-def computeTriadCounts(G, signs):
+def computeBalanceTriads(G, signs):
     """
     :param - G: graph
     :param - signs: Dictionary of signs (key = node pair (a,b), value = sign)
@@ -179,6 +179,71 @@ def unbalancedTriads(G, signs):
     return (numUnbalanced, len(triads))
 
 
+def computeStatusTriads(G, signs):
+    """
+    :param - G: graph
+    :param - signs: Dictionary of signs (key = node pair (a,b), value = sign)
+
+    return type: List, each position representing count of t0, t1, t2, and t3, respectively.
+    return: Return the counts for t0, t1, t2, and t3 triad types. Count each triad
+    only once and do not count self edges.
+    """
+    # Each position represents count of t0, t1, t2, t3, ... respectively
+    triad_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+    counted = set()
+
+    for NI in G.Nodes():
+        Id = NI.GetId()
+        deg = NI.GetDeg()
+        for nth in range(deg):
+            nId = NI.GetNbrNId(nth)
+            ndeg = G.GetNI(nId).GetDeg()
+            for nnth in range(ndeg):
+                nnId = G.GetNI(nId).GetNbrNId(nnth)
+                if Id == nnId: 
+                  continue
+
+                if G.IsEdge(Id, nnId):
+                  tup = tuple(sorted([Id, nId, nnId]))
+
+                  # Check the Set
+                  if (tup in counted):
+                    continue
+
+                  # Insert Triad into set
+                  counted.add(tup)
+
+                  X = NI
+                  # A = G.GetNI(nId)
+                  # B = G.GetNI(nnId)
+                  # t1, t2, t5, t6
+                  if X.IsInNId(nId) and X.IsOutNId(nnId):
+                    pass
+                  # t3, t4, t7, t8
+                  elif X.IsInNId(nId) and X.IsInNId(nnId): 
+                    pass
+                  # t9, t10, t13, t14
+                  elif X.IsOutNId(nId) and X.IsOutNId(nnId): 
+                    pass
+                  # t11, t12, t15, t16
+                  elif X.IsOutNId(nId) and X.IsInNId(nnId): 
+                    pass
+
+
+                  # Count Triads
+                  numPos = 0
+                  if (signs[(Id, nId)] > 0):
+                    numPos = numPos + 1
+                  if (signs[(nId, nnId)] > 0):
+                    numPos = numPos + 1
+                  if (signs[(Id, nnId)] > 0):
+                    numPos = numPos + 1
+
+                  triad_count[numPos] = triad_count[numPos] + 1  
+
+    return triad_count
+
+
 # Data Load
 print "DATA LOAD"
 print "Loading Unweighted Graphs:"
@@ -237,7 +302,7 @@ print
 # Triad Count and Positive Negative edges
 print "TRIAD COUNT"
 print "Epinions graph:"
-triad_count = computeTriadCounts(epinionsGr, epinionsSigns)
+triad_count = computeBalanceTriads(epinionsGr, epinionsSigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -245,7 +310,7 @@ for i in range(4):
 fracPosNeg(epinionsGr, epinionsSigns)
 
 print "Slashdot graph:"
-triad_count = computeTriadCounts(slashdotGr, slashdotSigns)
+triad_count = computeBalanceTriads(slashdotGr, slashdotSigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -255,7 +320,7 @@ for i in range(4):
 fracPosNeg(slashdotGr, slashdotSigns)
 
 print "Wiki RFA graph:"
-triad_count = computeTriadCounts(wikiRFAGr, wikiRFASigns)
+triad_count = computeBalanceTriads(wikiRFAGr, wikiRFASigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -265,7 +330,7 @@ fracPosNeg(wikiRFAGr, wikiRFASigns)
 
 """
 print "Wiki Edits graph:"
-triad_count = computeTriadCounts(wikiEditsGr, wikiEditsSigns)
+triad_count = computeBalanceTriads(wikiEditsGr, wikiEditsSigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -275,7 +340,7 @@ fracPosNeg(wikiEditsGr, wikiEditsSigns)
 """
 
 print "BTC Alpha graph:"
-triad_count = computeTriadCounts(btcAlphaGr, btcAlphaSigns)
+triad_count = computeBalanceTriads(btcAlphaGr, btcAlphaSigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -284,7 +349,7 @@ for i in range(4):
 fracPosNeg(btcAlphaGr, btcAlphaSigns)
 
 print "BTC OTC graph:"
-triad_count = computeTriadCounts(btcOTCGr, btcOTCSigns)
+triad_count = computeBalanceTriads(btcOTCGr, btcOTCSigns)
 total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
 for i in range(4):
     print "Count of Triad t%d: %d" % (i, triad_count[i])
@@ -316,8 +381,13 @@ print "Unbalanced Triads = %d, Total Triads = %d" % unbalancedTriads(btcOTCGr, b
 print
 
 
-print "Status:"
+# STATUS
+print "STATUS"
+print "Epinions graph:"
+triad_count = computeStatusTriads(epinionsGr, epinionsSigns)
+total_triads = float(sum(triad_count)) if sum(triad_count) != 0 else 1
+for i in range(16):
+    print "Count of Triad t%d: %d" % (i, triad_count[i])
+    print "Fraction of Triad t%d: %0.4f" % (i, triad_count[i]/total_triads)
 print
 
-print "Fairness and Goodness:"
-print
