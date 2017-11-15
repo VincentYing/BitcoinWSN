@@ -213,33 +213,50 @@ def computeStatusTriads(G, signs):
                   # Insert Triad into set
                   counted.add(tup)
 
+                  # Count Triads
                   X = NI
                   # A = G.GetNI(nId)
                   # B = G.GetNI(nnId)
                   # t1, t2, t5, t6
                   if X.IsInNId(nId) and X.IsOutNId(nnId):
-                    pass
+                    if (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[0] = triad_count[0] + 1  
+                    elif (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] < 0):
+                      triad_count[1] = triad_count[1] + 1  
+                    elif (signs[(Id, nId)] < 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[4] = triad_count[4] + 1  
+                    else:
+                      triad_count[5] = triad_count[5] + 1  
                   # t3, t4, t7, t8
                   elif X.IsInNId(nId) and X.IsInNId(nnId): 
-                    pass
+                    if (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[2] = triad_count[2] + 1  
+                    elif (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] < 0):
+                      triad_count[3] = triad_count[3] + 1  
+                    elif (signs[(Id, nId)] < 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[6] = triad_count[6] + 1  
+                    else:
+                      triad_count[7] = triad_count[7] + 1  
                   # t9, t10, t13, t14
                   elif X.IsOutNId(nId) and X.IsOutNId(nnId): 
-                    pass
+                    if (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[8] = triad_count[8] + 1  
+                    elif (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] < 0):
+                      triad_count[9] = triad_count[9] + 1  
+                    elif (signs[(Id, nId)] < 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[12] = triad_count[12] + 1  
+                    else:
+                      triad_count[13] = triad_count[13] + 1  
                   # t11, t12, t15, t16
                   elif X.IsOutNId(nId) and X.IsInNId(nnId): 
-                    pass
-
-
-                  # Count Triads
-                  numPos = 0
-                  if (signs[(Id, nId)] > 0):
-                    numPos = numPos + 1
-                  if (signs[(nId, nnId)] > 0):
-                    numPos = numPos + 1
-                  if (signs[(Id, nnId)] > 0):
-                    numPos = numPos + 1
-
-                  triad_count[numPos] = triad_count[numPos] + 1  
+                    if (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[10] = triad_count[10] + 1  
+                    elif (signs[(Id, nId)] > 0) and (signs[(Id, nnId)] < 0):
+                      triad_count[11] = triad_count[11] + 1  
+                    elif (signs[(Id, nId)] < 0) and (signs[(Id, nnId)] > 0):
+                      triad_count[14] = triad_count[14] + 1  
+                    else:
+                      triad_count[15] = triad_count[15] + 1  
 
     return triad_count
 
