@@ -71,3 +71,73 @@ BTC Alpha graph:
 Unbalanced Triads = 3413, Total Triads = 22153
 BTC OTC graph:
 Unbalanced Triads = 4782, Total Triads = 33493
+
+
+STATUS
+BTC Alpha graph:
+Count of Triad t0: 44946
+Count of Triad t1: 3763
+Count of Triad t2: 4320
+Count of Triad t3: 771
+Count of Triad t4: 3547
+Count of Triad t5: 1033
+Count of Triad t6: 403
+Count of Triad t7: 871
+Count of Triad t8: 4276
+Count of Triad t9: 573
+Count of Triad t10: 213
+Count of Triad t11: 44
+Count of Triad t12: 1031
+Count of Triad t13: 485
+Count of Triad t14: 170
+Count of Triad t15: 13
+Fraction of Triad t0: 0.6763
+Fraction of Triad t1: 0.0566
+Fraction of Triad t2: 0.0650
+Fraction of Triad t3: 0.0116
+Fraction of Triad t4: 0.0534
+Fraction of Triad t5: 0.0155
+Fraction of Triad t6: 0.0061
+Fraction of Triad t7: 0.0131
+Fraction of Triad t8: 0.0643
+Fraction of Triad t9: 0.0086
+Fraction of Triad t10: 0.0032
+Fraction of Triad t11: 0.0007
+Fraction of Triad t12: 0.0155
+Fraction of Triad t13: 0.0073
+Fraction of Triad t14: 0.0026
+Fraction of Triad t15: 0.0002
+
+BTC OTC graph:
+Count of Triad t0: 61185
+Count of Triad t1: 6018
+Count of Triad t2: 5998
+Count of Triad t3: 1592
+Count of Triad t4: 5307
+Count of Triad t5: 2124
+Count of Triad t6: 2316
+Count of Triad t7: 1988
+Count of Triad t8: 5961
+Count of Triad t9: 1039
+Count of Triad t10: 350
+Count of Triad t11: 1476
+Count of Triad t12: 2340
+Count of Triad t13: 2554
+Count of Triad t14: 162
+Count of Triad t15: 69
+Fraction of Triad t0: 0.6089
+Fraction of Triad t1: 0.0599
+Fraction of Triad t2: 0.0597
+Fraction of Triad t3: 0.0158
+Fraction of Triad t4: 0.0528
+Fraction of Triad t5: 0.0211
+Fraction of Triad t6: 0.0230
+Fraction of Triad t7: 0.0198
+Fraction of Triad t8: 0.0593
+Fraction of Triad t9: 0.0103
+Fraction of Triad t10: 0.0035
+Fraction of Triad t11: 0.0147
+Fraction of Triad t12: 0.0233
+Fraction of Triad t13: 0.0254
+Fraction of Triad t14: 0.0016
+Fraction of Triad t15: 0.0007
