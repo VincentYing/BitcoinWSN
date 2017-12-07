@@ -91,13 +91,30 @@ btcOTCSigns = loadDirectedSigns("Datasets/soc-sign-bitcoinotc.csv")
 print
 
 
-# Encode each edge as a 2n dimensional feature vector.
+# Graph nodes and edges
+numNodes = btcAlphaGr.GetNodes()
+numEdges = btcAlphaGr.GetEdges()
+maxId = btcAlphaGr.GetMxNId()
 
 # Compose training set for pair (feature vector, w(e)).
+# Encode each edge as a 2n dimensional feature vector.
+train_features = []
+train_target = [] 
+
+for edge in btcAlphaGr.Edges():
+  fVec = [0] * (maxId * maxId)
+
+  x, y = edge.GetId()
+  idx = (x - 1) * numNodes + y
+  fVec[idx] = 1
+  w = btcAlphaSigns[(x, y)]
+  
+  train_features.append(fVec)
+  train_target.append(w)
 
 # Train a classification model.
-#X = 
-#y = 
+X = train_features
+y = train_target 
 
 # Hard Voting
 clf1 = LogisticRegression(random_state=1)
