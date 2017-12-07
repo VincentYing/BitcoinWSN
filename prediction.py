@@ -101,6 +101,7 @@ maxId = btcAlphaGr.GetMxNId()
 train_features = []
 train_target = [] 
 
+i = 0
 for edge in btcAlphaGr.Edges():
   fVec = [0] * (maxId * maxId)
 
@@ -111,6 +112,10 @@ for edge in btcAlphaGr.Edges():
   
   train_features.append(fVec)
   train_target.append(w)
+
+  i = i + 1
+  if i > 500:
+    break
 
 # Train a classification model.
 X = train_features
