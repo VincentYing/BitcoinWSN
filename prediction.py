@@ -10,6 +10,11 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import powerlaw
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
 
 
 def loadDirectedSigns(filename):
@@ -37,7 +42,6 @@ def loadDirectedSigns(filename):
 
     return signs
 
-
 def selfEdgeDel(G):
     # Remove self-edges
     for edge in G.Edges():
@@ -47,6 +51,28 @@ def selfEdgeDel(G):
         G.DelEdge(srcNId, dstNId)
 
     return G
+
+def ModSign(A):
+    B = {}
+    for i in A.keys():
+        B[i] = abs(A[i])
+    return B
+
+def NormalizeSign(A):
+    M = max(ModSign(A).values())
+    B = {}
+    for i in A.keys():
+        B[i] = 1.0 * A[i] / M
+    return B
+
+def UnweightedSign(A):
+    B = {}
+    for i in A.keys():
+        if A[i] > 0:
+            B[i] = 1
+        else:
+            B[i] = -1
+    return B
 
 
 # Data Load
@@ -63,3 +89,47 @@ btcOTCGr = snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0
 btcOTCGr = selfEdgeDel(btcOTCGr)
 btcOTCSigns = loadDirectedSigns("Datasets/soc-sign-bitcoinotc.csv")
 print
+
+
+# Encode each edge as a 2n dimensional feature vector.
+
+# Compose training set for pair (feature vector, w(e)).
+
+# Train a classification model.
+#X = 
+#y = 
+
+# Hard Voting
+clf1 = LogisticRegression(random_state=1)
+clf2 = RandomForestClassifier(random_state=1)
+clf3 = GaussianNB()
+
+eclf = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)], voting='hard')
+
+for clf, label in zip([clf1, clf2, clf3, eclf], ['Logistic Regression', 'Random Forest', 'naive Bayes', 'Ensemble']):
+  scores = cross_val_score(clf, X, y, cv=5, scoring='accuracy')
+  print("Accuracy: %0.2f (+/- %0.2f) [%s]" % (scores.mean(), scores.std(), label))
+
+#Soft Voting
+"""
+clf1 = DecisionTreeClassifier(max_depth=4)
+clf2 = KNeighborsClassifier(n_neighbors=7)
+clf3 = SVC(kernel='rbf', probability=True)
+
+eclf = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)], voting='soft', weights=[2,1,2])
+
+clf1 = clf1.fit(X,y)
+clf2 = clf2.fit(X,y)
+clf3 = clf3.fit(X,y)
+eclf = eclf.fit(X,y)
+"""
+
+
+# Predict signed weights of remaining directed edges.
+
+# Number of training examples is m.
+
+# Look at clusters (communities) in the network.
+
+# Prune away non-relevant features for a given edge.
+
