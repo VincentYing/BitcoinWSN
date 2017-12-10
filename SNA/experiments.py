@@ -38,7 +38,7 @@ def run_experiment():
     #data_file_name = "data/Preprocessed Data/small_network.npy"
     #data_file_name = "data/Preprocessed Data/wiki_elections_csr.npy"
     data_file_name = "data/Preprocessed Data/bitcoinalpha_csr.npy"
-    data_file_name = "data/Preprocessed Data/bitcoinotc_csr.npy"
+    #data_file_name = "data/Preprocessed Data/bitcoinotc_csr.npy"
     try:
       adj_matrix = np.load(data_file_name).item()
     except Exception as e:
