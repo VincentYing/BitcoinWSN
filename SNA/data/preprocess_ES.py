@@ -7,8 +7,8 @@ import scipy.sparse as sp
 #Preprocess data
 #Optionally run normally or in test mode (when writing tests)
 def preprocess(mode = "normal"):
-  FILE_PATH = "Raw Data/soc-sign-epinions.txt"
-  #FILE_PATH = "Raw Data/soc-sign-Slashdot090221.txt"
+  #FILE_PATH = "Raw Data/soc-sign-epinions.txt"
+  FILE_PATH = "Raw Data/soc-sign-Slashdot090221.txt"
 
   #Dataset name (for filename of matrix)
   #Split off part right before file extension

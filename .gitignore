@@ -8,8 +8,6 @@
 *.so
 *.pyc
 *.txt
-data/Preprocessed Data/
-data/Raw Data/
 analytics/plot.py
 results/
 
