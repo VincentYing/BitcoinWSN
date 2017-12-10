@@ -10,6 +10,7 @@
 *.txt
 analytics/plot.py
 results/
+Datasets/WikiSignedNet.csv
 
 # Packages #
 ############
