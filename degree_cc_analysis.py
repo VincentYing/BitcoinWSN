@@ -273,7 +273,7 @@ def GetDirectedWeightedDegreeDistribution(G, signs):
 # In[97]:
 
 
-GD = selfEdgeDel(snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0, 1, ','))
+G = selfEdgeDel(snap.LoadEdgeList(snap.PNGraph, "Datasets/soc-sign-bitcoinotc.csv", 0, 1, ','))
 signs = loadSigns("Datasets/soc-sign-bitcoinotc.csv")
 GetDirectedWeightedDegreeDistribution(G, signs)
 
